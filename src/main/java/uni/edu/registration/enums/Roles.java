@@ -5,5 +5,6 @@ package uni.edu.registration.enums;
  */
 public enum Roles {
     ADMIN,
-    USER
+    USER,
+    MANAGER
 }
