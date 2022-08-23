@@ -23,11 +23,6 @@ public class StudentController {
         return studentService.findAll();
     }
 
-    @PostMapping
-    public Student addStudent(@RequestBody Student student){
-        return studentService.registerStudent(student);
-    }
-
     @GetMapping("/{stdId}")
     public Student getStd(@PathVariable Long stdId){
         return studentService.getStd(stdId);

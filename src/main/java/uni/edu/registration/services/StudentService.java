@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import uni.edu.registration.controllers.dto.LoginDto;
 import uni.edu.registration.models.Student;
 import uni.edu.registration.repositories.StudentRepository;
 
@@ -75,5 +76,9 @@ public class StudentService {
     private boolean emailFormatMatches(String email){
         String regexPattern = "^(.+)@(\\S+)$";
         return Pattern.compile(regexPattern).matcher(email).matches();
+    }
+
+    public ResponseEntity<String> login(LoginDto loginDto){
+        return new ResponseEntity<String>(HttpStatus.ACCEPTED);
     }
 }
