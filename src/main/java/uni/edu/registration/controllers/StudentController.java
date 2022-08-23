@@ -1,12 +1,10 @@
 package uni.edu.registration.controllers;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.edu.registration.models.Student;
 import uni.edu.registration.services.StudentService;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by rasoolzadeh
@@ -27,7 +25,7 @@ public class StudentController {
 
     @PostMapping
     public Student addStudent(@RequestBody Student student){
-        return studentService.addStudent(student);
+        return studentService.registerStudent(student);
     }
 
     @GetMapping("/{stdId}")

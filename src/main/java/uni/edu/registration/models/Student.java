@@ -1,10 +1,7 @@
 package uni.edu.registration.models;
 
 
-import uni.edu.registration.enums.Roles;
-
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by rasoolzadeh

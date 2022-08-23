@@ -3,6 +3,7 @@ package uni.edu.registration.services;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uni.edu.registration.models.Student;
@@ -27,13 +28,14 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Student addStudent(Student student){
+    public Student registerStudent(Student student){
         if(student.getEmail()!=null){
             if(!emailFormatMatches(student.getEmail()))
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Email Format Error!");
             if(studentRepository.findByEmail(student.getEmail()).isPresent())
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
+        student.setPassword( (new BCryptPasswordEncoder()).encode(student.getPassword()));
         return studentRepository.save(student);
     }
 
