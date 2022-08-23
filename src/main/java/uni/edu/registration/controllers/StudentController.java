@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import uni.edu.registration.models.Student;
 import uni.edu.registration.services.StudentService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -19,8 +20,9 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getAll(){
-        return studentService.findAll();
+    public List<Student> getAll(HttpServletRequest request){
+        System.out.println("Get : get all!");
+        return studentService.findAll(request);
     }
 
     @GetMapping("/{stdId}")

@@ -11,18 +11,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Created by rasoolzadeh
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityAdapter extends WebSecurityConfigurerAdapter {
+    /*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user")
                 .password("$2a$10$6UT4cMbfrcYzFc3C8uumqOqY8e2XT9OQoStyW.XosbbxH6jJkLWlq") // user
                 .roles("user");
-    }
+    }*/
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,6 +33,12 @@ public class SecurityAdapter extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/auth/**").permitAll()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "UNAUTHORIZED : " + ex.getMessage()))
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
     }

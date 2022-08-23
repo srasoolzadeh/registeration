@@ -9,6 +9,9 @@ import uni.edu.registration.controllers.dto.LoginDto;
 import uni.edu.registration.models.Student;
 import uni.edu.registration.services.StudentService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 /**
  * Created by rasoolzadeh
  */
@@ -27,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(LoginDto loginDto){
-        return studentService.login(loginDto);
+    public String login(@RequestBody LoginDto loginDto, HttpServletRequest request){
+        return studentService.login(loginDto, request);
     }
 }
