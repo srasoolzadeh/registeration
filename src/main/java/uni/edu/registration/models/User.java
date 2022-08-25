@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -19,15 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "session_tbl")
-public class UserSession {
+@Table(name = "user_tbl")
+public class User {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(unique = true)
     private String username;
-    private String UserAgent;
-    private String ip;
+    private String password;
     private String roles;
-
-
 }

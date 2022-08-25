@@ -11,5 +11,5 @@ import java.util.Optional;
  */
 @Repository
 public interface UserSessionRepository extends JpaRepository<UserSession, Long> {
-    Optional<UserSession> findByEmail(String email);
+    public Optional<UserSession> findByUsername(String username);
 }
