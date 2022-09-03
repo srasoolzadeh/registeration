@@ -1,6 +1,7 @@
 package uni.edu.registration.services;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uni.edu.registration.controllers.dto.LoginRequest;
@@ -33,6 +34,7 @@ public class UserService {
         Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
         if(foundUser.isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username registered: "+user.getUsername());
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -44,7 +46,8 @@ public class UserService {
         Optional<User> foundUser = userRepository.findByUsername(loginRequest.getUsername());
         if(foundUser.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "username Not found: "+loginRequest.getUsername());
-        if(!loginRequest.getPassword().equals(foundUser.get().getPassword()))
+        if(!(new BCryptPasswordEncoder().matches(loginRequest.getPassword(), foundUser.get().getPassword())))
+        //if(!loginRequest.getPassword().equals(foundUser.get().getPassword()))
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "password is incorrect!");
         Optional<UserSession> foundSession = userSessionRepository.findByUsername(loginRequest.getUsername());
         if(foundSession.isPresent()){
