@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
+import uni.edu.registration.models.User;
 import uni.edu.registration.models.UserSession;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +34,9 @@ public class JwtUtils {
     @Value("${senitor.app.device.jwtExpirationMs}")
     private int deviceJwtExpirationMs;
 
-    public String generateToken(UserSession userSession) {
+    public String generateToken(User user) {
         return Jwts.builder()
-                .setClaims(createClaims(userSession))
+                .setClaims(createClaims(user))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -52,7 +53,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String getSessionIdFromJwtToken(String token) {
+    public String getUsernameFromJwtToken(String token) {
         validateJwtToken(token);
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getId();
     }
@@ -85,15 +86,15 @@ public class JwtUtils {
     }
 
 
-    private Claims createClaims(UserSession userSession) {
+    private Claims createClaims(User user) {
         Claims token = new DefaultClaims()
-                .setId(userSession.getId().toString())
+                .setId(user.getUsername())
                 .setSubject("access-token")
                 .setIssuer("senitor.ir")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs));
         //Optional<String> roles = userSession.getRoles().stream().map(Enum::toString).reduce((r1, r2) -> r1 + "," + r2);
-        String roles = userSession.getRoles();
+        String roles = user.getRoles();
         token.put("roles", roles);
         return token;
     }

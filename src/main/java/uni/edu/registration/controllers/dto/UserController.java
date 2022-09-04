@@ -1,13 +1,11 @@
 package uni.edu.registration.controllers.dto;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uni.edu.registration.models.User;
 import uni.edu.registration.services.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -25,5 +23,10 @@ public class UserController {
     @GetMapping
     public List<User> findAll(){
         return userService.findAll();
+    }
+
+    @PostMapping
+    public User update(@RequestBody UserDto userDto, HttpServletRequest request){
+        return userService.update(userDto, request);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uni.edu.registration.controllers.dto.LoginRequest;
+import uni.edu.registration.controllers.dto.UserDto;
 import uni.edu.registration.models.User;
 import uni.edu.registration.models.UserSession;
 import uni.edu.registration.repositories.UserRepository;
@@ -47,7 +48,6 @@ public class UserService {
         if(foundUser.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "username Not found: "+loginRequest.getUsername());
         if(!(new BCryptPasswordEncoder().matches(loginRequest.getPassword(), foundUser.get().getPassword())))
-        //if(!loginRequest.getPassword().equals(foundUser.get().getPassword()))
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "password is incorrect!");
         Optional<UserSession> foundSession = userSessionRepository.findByUsername(loginRequest.getUsername());
         if(foundSession.isPresent()){
@@ -55,7 +55,6 @@ public class UserService {
             foundSession.get().setIp(request.getHeader("x-real-ip"));
             foundSession.get().setRoles(foundUser.get().getRoles());
             userSessionRepository.save(foundSession.get());
-            return jwtUtils.generateToken(foundSession.get());
         }
         UserSession userSession = userSessionRepository.save(
                 UserSession.builder()
@@ -64,6 +63,19 @@ public class UserService {
                         .ip(request.getHeader("x-real-ip"))
                         .roles(foundUser.get().getRoles())
                         .build());
-        return jwtUtils.generateToken(userSession);
+        return jwtUtils.generateToken(foundUser.get());
+    }
+
+    public User update(UserDto userDto, HttpServletRequest request){
+        String username = jwtUtils.getUsernameFromJwtToken(jwtUtils.parseJwt(request));
+        Optional<User> foundUser = userRepository.findByUsername(username);
+        if(foundUser.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "not found username: "+username);
+        System.out.println("==> username found: "+username);
+        if(userDto.getPassword()!=null)
+            foundUser.get().setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+        if(userDto.getRole()!=null)
+            foundUser.get().setRoles(userDto.getRole());
+        return userRepository.save(foundUser.get());
     }
 }
