@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uni.edu.registration.controllers.dto.LoginRequest;
+import uni.edu.registration.controllers.dto.RegisterUserDto;
 import uni.edu.registration.controllers.dto.UserDto;
 import uni.edu.registration.models.User;
 import uni.edu.registration.models.UserSession;
@@ -31,12 +32,20 @@ public class UserService {
         this.jwtUtils = jwtUtils;
     }
 
-    public User register(User user){
-        Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
+    public User register(RegisterUserDto registerUserDto){
+        Optional<User> foundUser = userRepository.findByUsername(registerUserDto.getUsername());
         if(foundUser.isPresent())
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username registered: "+user.getUsername());
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        return userRepository.save(user);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username registered: "+registerUserDto.getUsername());
+        return userRepository.save(User.builder()
+                .username(registerUserDto.getUsername())
+                .password(new BCryptPasswordEncoder().encode(registerUserDto.getPassword()))
+                .email(registerUserDto.getEmail())
+                .phone(registerUserDto.getPhone())
+                .enabled(false)
+                .roles(null)
+                .firstName(registerUserDto.getFirstName())
+                .lastName(registerUserDto.getLastName())
+        .build());
     }
 
     public List<User> findAll(){
