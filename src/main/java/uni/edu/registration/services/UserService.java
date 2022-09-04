@@ -55,14 +55,15 @@ public class UserService {
             foundSession.get().setIp(request.getHeader("x-real-ip"));
             foundSession.get().setRoles(foundUser.get().getRoles());
             userSessionRepository.save(foundSession.get());
+        }else{
+            UserSession userSession = userSessionRepository.save(
+                    UserSession.builder()
+                            .username(foundUser.get().getUsername())
+                            .UserAgent(request.getHeader("User-Agent"))
+                            .ip(request.getHeader("x-real-ip"))
+                            .roles(foundUser.get().getRoles())
+                            .build());
         }
-        UserSession userSession = userSessionRepository.save(
-                UserSession.builder()
-                        .username(foundUser.get().getUsername())
-                        .UserAgent(request.getHeader("User-Agent"))
-                        .ip(request.getHeader("x-real-ip"))
-                        .roles(foundUser.get().getRoles())
-                        .build());
         return jwtUtils.generateToken(foundUser.get());
     }
 

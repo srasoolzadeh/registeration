@@ -1,5 +1,7 @@
 package uni.edu.registration.controllers.dto;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import uni.edu.registration.models.User;
@@ -21,6 +23,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<User> findAll(){
         return userService.findAll();
     }
