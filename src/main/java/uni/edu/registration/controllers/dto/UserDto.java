@@ -4,6 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uni.edu.registration.models.Role;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 /**
  * Created by rasoolzadeh
@@ -14,5 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDto {
     private String password;
-    private String role;
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 }

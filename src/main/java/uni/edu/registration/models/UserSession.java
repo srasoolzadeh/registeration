@@ -5,11 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by rasoolzadeh
@@ -27,7 +25,9 @@ public class UserSession {
     private String username;
     private String UserAgent;
     private String ip;
-    private String roles;
-
+//    @ElementCollection(targetClass = Role.class)
+//    @Enumerated(EnumType.STRING)
+//    private Set<Role> roles;
+//
 
 }

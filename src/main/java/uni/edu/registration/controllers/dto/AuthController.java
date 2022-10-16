@@ -33,4 +33,9 @@ public class AuthController {
     public String login(@RequestBody LoginRequest loginRequest, HttpServletRequest request){
         return userService.login(loginRequest, request);
     }
+
+    @PostMapping("/login2")
+    public String login2(@RequestBody LoginRequest loginRequest, HttpServletRequest request){
+        return userService.login(loginRequest, request);
+    }
 }

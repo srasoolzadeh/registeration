@@ -93,9 +93,9 @@ public class JwtUtils {
                 .setIssuer("senitor.ir")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs));
-        //Optional<String> roles = userSession.getRoles().stream().map(Enum::toString).reduce((r1, r2) -> r1 + "," + r2);
-        String roles = user.getRoles();
-        token.put("roles", roles);
+        Optional<String> roles = user.getRoles().stream().map(Enum::toString).reduce((r1, r2) -> r1 + "," + r2);
+        if(roles.isPresent())
+            token.put("roles", roles);
         return token;
     }
     private Claims createClaimsForEmailConfirmation(String email) {
